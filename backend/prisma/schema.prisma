@@ -26,12 +26,13 @@ model User {
 
 model Link {
   id String @id @default(uuid())
+  title String?
   url String
-  content String
+  context String
   tags Tag[]
-  createdAt DateTime @default(now())
-  createdBy User @relation(fields: [createdById], references: [id])
-  createdById String
+  createdAt DateTime @db.Timestamptz() @default(now())
+  createdBy User? @relation(fields: [createdById], references: [id])
+  createdById String?
   @@map("link")
 }
 
@@ -39,9 +40,9 @@ model Tag {
   id String @id @default(uuid())
   name String
   links Link[]
-  createdAt DateTime @default(now())
-  createdBy User @relation(fields: [createdById], references: [id])
-  createdById String
+  createdAt DateTime @db.Timestamptz() @default(now())
+  createdBy User? @relation(fields: [createdById], references: [id])
+  createdById String?
 
   @@map("tag")
 }
