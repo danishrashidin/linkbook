@@ -1,0 +1,16 @@
+type Tag {
+  id: String!
+  name: String!
+  links: [Link!]
+  createdAt: DateTime!
+  createdById: String
+  createdBy: User
+}
+
+input AddTagInput {
+  name: String!
+}
+
+extend type Mutation {
+  addTag(input: AddTagInput): Tag
+}

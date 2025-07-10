@@ -1,0 +1,53 @@
+input AddLinkInput {
+  context: String!
+  tagIds: [String!]
+  title: String
+  url: String!
+}
+
+input AddTagInput {
+  name: String!
+}
+
+scalar DateTime
+
+type Link {
+  context: String!
+  createdAt: DateTime!
+  createdBy: User
+  createdById: String
+  id: String!
+  tags: [Tag!]
+  title: String
+  url: String!
+}
+
+type Mutation {
+  addLink(input: AddLinkInput): Link
+  addTag(input: AddTagInput): Tag
+  deleteLink(id: String!): Link
+}
+
+type Query {
+  link(id: String!): Link
+  links: [Link!]!
+  user(id: String!): User
+  users: [User!]!
+}
+
+type Tag {
+  createdAt: DateTime!
+  createdBy: User
+  createdById: String
+  id: String!
+  links: [Link!]
+  name: String!
+}
+
+type User {
+  email: String!
+  id: String!
+  links: [Link!]
+  name: String!
+  tags: [Tag!]
+}
