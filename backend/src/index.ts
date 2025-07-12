@@ -9,17 +9,20 @@ import { resolvers } from "./schema/resolvers.generated";
 configDotenv();
 
 const PORT = process.env.PORT || 3000;
-const app = express();
 
-app.use(cors());
+(async function init() {
+  const app = express();
 
-/* GQL */
-const gqlServer = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
+  app.use(cors());
 
-gqlServer.start().then(() => {
+  /* GQL */
+  const gqlServer = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
+
+  await gqlServer.start();
+
   app.use("/graphql", express.json(), expressMiddleware(gqlServer));
 
   app.get("/ping", (_req, res) => {
@@ -31,4 +34,4 @@ gqlServer.start().then(() => {
   app.listen(PORT, () => {
     console.log("Listening at port:", PORT);
   });
-});
+})();
