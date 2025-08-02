@@ -9,7 +9,7 @@ export default function Header() {
             }}>linkbook.</Typography>
             <TextField sx={{
                 width: 300
-            }} variant="outlined" label="Search for links" placeholder="Tags, Titles etc." />
+            }} variant="outlined" label="Search for links" placeholder="Tags, Titles etc." size="small" />
         </Stack>
         <Avatar>D</Avatar>
     </Stack>
