@@ -4,7 +4,7 @@ import { createTheme } from "@mui/material";
 const theme = createTheme({
   palette: {},
   shape: {
-    borderRadius: "6px",
+    borderRadius: "8px",
   },
   components: {
     MuiButton: {
