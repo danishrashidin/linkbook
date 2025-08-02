@@ -12,7 +12,7 @@ export class GQLClient {
       const cache = new InMemoryCache();
       this.instance = new ApolloClient({
         cache,
-        uri: "http://localhost:3000/graphql",
+        uri: process.env.NEXT_PUBLIC_GRAPHQL_API,
       });
     }
 
