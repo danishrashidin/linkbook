@@ -27,7 +27,10 @@ export default function RootLayout({
       <Box
         component='body'
         sx={{
-          margin: 0
+          margin: 0,
+          '&, *': {
+            boxSizing: 'border-box'
+          }
         }}
       >
         <ThemeProvider theme={theme}>

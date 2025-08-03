@@ -6,11 +6,11 @@ import { FC } from "react";
 const AddLinkCard: FC = () => {
     return <>
         <Card variant="outlined" sx={{
-            paddingInline: 2,
-            paddingBlock: 10,
+            padding: 2,
             display: "flex",
             flexDirection: 'column',
-
+            justifyContent: 'center',
+            height: "100%",
         }}>
             <Stack direction="column" gap={2} paddingBlockEnd={3}>
                 <Typography variant="h6" fontWeight={500} letterSpacing={-.15}>Quickly save a link</Typography>
