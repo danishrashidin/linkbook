@@ -2,11 +2,11 @@
 import { gql, useQuery } from "@apollo/client";
 import { Fragment, useEffect } from "react";
 import { Stack, Grid } from "@mui/material";
-import AddLinkCard from "@/components/ui/links/AddLinkCard";
-import LinkPreviewCard from "@/components/ui/links/LinkPreviewCard";
+import AddLinkCard from "@/modules/links/components/AddLinkCard";
+import LinkPreviewCard from "@/modules/links/components/LinkPreviewCard";
 
 export default function Home() {
-  const { data, loading } = useQuery(gql`
+  const { data, refetch } = useQuery(gql`
     query {
       links {
         id
@@ -14,7 +14,9 @@ export default function Home() {
         context
       }
     }
-    `)
+    `, {
+    fetchPolicy: 'network-only'
+  })
 
   useEffect(() => {
     console.log(data)
@@ -29,9 +31,9 @@ export default function Home() {
         xs: 1
       }}>
         <Grid size={1}>
-          <AddLinkCard />
+          <AddLinkCard onAdded={() => refetch()} />
         </Grid>
-        {data && data?.links.map(link => (
+        {data && data?.links.map((link: any) => (
           <Fragment key={link.id}>
             <Grid size={1} >
               <LinkPreviewCard url={link.url} context={link.context} />

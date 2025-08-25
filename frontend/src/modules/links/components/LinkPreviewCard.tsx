@@ -8,7 +8,6 @@ import { getPreview } from "@/api/link";
 
 interface LinkPreviewCardProps {
     url: string
-    title?: string
     context: string
 }
 
@@ -49,7 +48,7 @@ const LinkPreviewCard: FC<LinkPreviewCardProps> = (props) => {
 
     return <>
         <Card variant="outlined" sx={{
-            height: 400,
+            height: "100%",
             padding: 2,
         }}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" gap={4}>
@@ -62,21 +61,24 @@ const LinkPreviewCard: FC<LinkPreviewCardProps> = (props) => {
                 </IconButton>
             </Stack>
             <PreviewImage alt="test" src={preview?.images?.[0] ? preview.images[0] : "https://placehold.co/512x256/F5F5F5/png?text=No+Preview+Image"} height={256} width={512} />
-            <Stack direction='row' alignItems='center' marginBlockStart={2} gap={1}>
+            <Typography variant="h6" marginBlockStart={2}>{props.context}</Typography>
+            <Stack direction='row' alignItems={'center'} marginBlockStart={3} gap={1}>
                 <Image alt="favicon" src={preview?.favicons?.[0] ? preview.favicons[0] : "https://placehold.co/24x24/png"} width={20} height={20} />
-                <Typography variant="subtitle1" lineHeight={0}>{preview?.title}</Typography>
+                <Typography variant="body1" sx={{
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                }}>{preview?.title}</Typography>
             </Stack>
-            <Typography variant="body2" color="grey.600" marginBlockStart={2} sx={{
+            <Typography variant="body2" color="grey.600" marginBlockStart={1} sx={{
                 display: '-webkit-box',
                 'WebkitBoxOrient': 'vertical',
                 'WebkitLineClamp': 2,
                 overflow: 'hidden',
-            }}>{preview?.description}</Typography>
+            }}>{preview?.description || <i>No description provided</i>}</Typography>
             <Divider sx={{ marginBlockStart: 2 }} />
             <Stack direction='row' flexWrap='wrap' marginBlockStart={2} gap={1}>
                 <Chip label="Add tag" icon={<AddIcon />} clickable />
-                <Chip label="test" />
-                <Chip label="test" />
             </Stack>
         </Card>
     </>

@@ -1,7 +1,7 @@
 import { Stack, Typography, TextField, Avatar } from "@mui/material";
 
 export default function Header() {
-    return <Stack direction='row' alignItems='center' justifyContent={'space-between'} paddingX={2} paddingY={1.5}>
+    return <Stack direction='row' alignItems='center' justifyContent={'space-between'} gap={2} paddingX={2} paddingY={1.5}>
         <Stack direction='row' gap={10} alignItems={"center"}>
             <Typography variant="h5" marginInlineStart={2} marginY={1} sx={{
                 fontWeight: 500,
