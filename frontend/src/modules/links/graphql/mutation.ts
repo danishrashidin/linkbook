@@ -12,3 +12,11 @@ export const AddLinkQuery = gql`
     }
   }
 `;
+
+export const DeleteLinkQuery = gql`
+  mutation DeleteLink($id: String!) {
+    deleteLink(id: $id) {
+      id
+    }
+  }
+`;

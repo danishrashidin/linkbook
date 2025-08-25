@@ -1,14 +1,19 @@
-import { Card, Chip, Divider, IconButton, Stack, styled, Typography } from "@mui/material"
-import { FC, useEffect, useState } from "react"
+import { Button, Card, Chip, Divider, IconButton, Stack, styled, Typography, Menu, MenuItem, ListItemIcon, Dialog, DialogContent, DialogActions, DialogTitle, Snackbar, Alert } from "@mui/material"
+import { FC, MouseEventHandler, useEffect, useState } from "react"
 import OpenLinkIcon from "@mui/icons-material/OpenInNew"
 import MoreIcon from "@mui/icons-material/MoreVert"
 import AddIcon from "@mui/icons-material/Add"
 import Image from "next/image"
+import DeleteIcon from "@mui/icons-material/Delete"
 import { getPreview } from "@/api/link";
+import { DeleteLinkQuery } from "../graphql/mutation"
+import { useMutation } from "@apollo/client"
 
-interface LinkPreviewCardProps {
+type LinkPreviewCardProps = {
+    id: string
     url: string
     context: string
+    onDelete?: VoidFunction
 }
 
 const UrlBar: FC<{ url: string }> = (props) => {
@@ -33,8 +38,12 @@ const PreviewImage = styled(Image)((({ theme }) => ({
     borderColor: theme.palette.grey['300']
 })))
 
-const LinkPreviewCard: FC<LinkPreviewCardProps> = (props) => {
+const LinkPreviewCard: FC<LinkPreviewCardProps> = ({ id, ...props }) => {
+    const [deleteLink, { loading }] = useMutation(DeleteLinkQuery)
+    const [isDeleteDialogShown, setShowDeleteDialog] = useState(false)
     const [preview, setPreview] = useState<any>(null);
+    const [menuAnchor, setMenuAnchor] = useState<Element | null>(null)
+    const isMenuOpen = !!menuAnchor
     const hostname = (preview) ? new URL(preview?.url).hostname : ''
 
     useEffect(() => {
@@ -46,15 +55,55 @@ const LinkPreviewCard: FC<LinkPreviewCardProps> = (props) => {
         fetchPreview()
     }, [])
 
+    const toggleMenu: MouseEventHandler = (event) => {
+        if (!isMenuOpen) {
+            // Set anchor when its closed
+            setMenuAnchor(event.currentTarget)
+        } else {
+            setMenuAnchor(null)
+        }
+    }
+
+    const toggleDeleteDialog = () => {
+        if (isDeleteDialogShown) {
+            setShowDeleteDialog(false)
+        } else {
+            setShowDeleteDialog(true)
+        }
+    }
+
+    const handleDeleteLink = async () => {
+        try {
+            await deleteLink({
+                variables: {
+                    id
+                }
+            })
+            props.onDelete && props.onDelete()
+        } catch (error) {
+
+        } finally {
+            setShowDeleteDialog(false)
+        }
+    }
+
     return <>
         <Card variant="outlined" sx={{
             height: "100%",
             padding: 2,
         }}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" gap={4}>
-                <IconButton>
+                <IconButton onClick={toggleMenu}>
                     <MoreIcon />
                 </IconButton>
+                <Menu open={isMenuOpen} onClose={toggleMenu} anchorEl={menuAnchor}>
+                    <MenuItem onClick={toggleDeleteDialog}>
+                        <ListItemIcon>
+                            <DeleteIcon />
+                        </ListItemIcon>
+                        <Typography variant="body1">Remove link</Typography>
+                    </MenuItem>
+                </Menu>
                 <UrlBar url={hostname} />
                 <IconButton href={preview?.url} target="_blank">
                     <OpenLinkIcon />
@@ -81,6 +130,16 @@ const LinkPreviewCard: FC<LinkPreviewCardProps> = (props) => {
                 <Chip label="Add tag" icon={<AddIcon />} clickable />
             </Stack>
         </Card>
+        <Dialog open={isDeleteDialogShown} onClose={toggleDeleteDialog}>
+            <DialogTitle>Are you sure?</DialogTitle>
+            <DialogContent>
+                <Typography variant="body1">Once the link is deleted, you can no longer recover it.</Typography>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={toggleDeleteDialog}>Cancel</Button>
+                <Button onClick={handleDeleteLink}>Confirm</Button>
+            </DialogActions>
+        </Dialog>
     </>
 }
 

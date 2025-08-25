@@ -18,10 +18,6 @@ export default function Home() {
     fetchPolicy: 'network-only'
   })
 
-  useEffect(() => {
-    console.log(data)
-  }, [data])
-
   return (
     <Stack direction='column' flexGrow={1} bgcolor='grey.100' padding={2}>
       <Grid container spacing={2} columns={{
@@ -36,7 +32,7 @@ export default function Home() {
         {data && data?.links.map((link: any) => (
           <Fragment key={link.id}>
             <Grid size={1} >
-              <LinkPreviewCard url={link.url} context={link.context} />
+              <LinkPreviewCard id={link.id} url={link.url} context={link.context} onDelete={() => refetch()} />
             </Grid>
           </Fragment>
         ))}
